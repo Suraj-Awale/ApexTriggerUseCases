@@ -1,0 +1,28 @@
+Scenario --->   When Contact is created then share record to ShareGroupName Group.
+
+
+Trigger ConShare On  Contact(after insert){
+	if(trigger.isInsert && trigger.isAfter){
+		 Consharehandler.conShare(trigger.new);}
+		}
+		
+		
+Handler Class 
+
+Public class Consharehandler{
+	public static void conShare(list<contact> conRecords){
+	Id userId = [ Select Id, name from Group Where Name ='ShareGroupName' LIMIT 1].Id;
+	
+		for(contact con : conRecords){
+			ContactShare cs = new ContactShare();
+			cs.contactId = con.Id;
+			cs.rowcause = 'Manual';
+			cs.ContactAccesslevel = 'Edit';
+			cs.UserOrGroupId =  userId;
+			csAdded.add(cs);
+			}
+			
+		if(!csAdded.isEmpty()){
+			insert csAdded;
+			}
+			}}
